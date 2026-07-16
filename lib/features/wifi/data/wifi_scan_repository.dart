@@ -1,7 +1,9 @@
 import 'dart:async';
+
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:wifi_scan/wifi_scan.dart';
+import 'package:wifi_scan_test/features/wifi/data/measurement_logger.dart';
 
 abstract class WifiScanRepository {
   Stream<List<WiFiAccessPoint>> get results;
@@ -59,3 +61,6 @@ final wifiScanResultsProvider =
       await repo.start();
       yield* repo.results;
     });
+final MeasurementLoggerProvider = Provider<MeasurementLogger>((ref) {
+  return MeasurementLogger();
+});
