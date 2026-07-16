@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "732361941003",
+    "firebase_url": "https://kakurenbo-app-ae56b-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "kakurenbo-app-ae56b",
+    "storage_bucket": "kakurenbo-app-ae56b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:732361941003:android:8d146aa499f4d8d7eca70e",
+        "android_client_info": {
+          "package_name": "com.example.wifi_scan_test"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhzvBw4nmNwMotWL3CC13m3c8UHG2if4c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
