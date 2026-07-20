@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:wifi_scan/wifi_scan.dart';
 
+const _csvHeader = 'timestamp, distance_m, device, ssid, bssid, rssi_dbm\n';
+
 class MeasurementLogger {
   File? _file;
 
@@ -13,9 +15,7 @@ class MeasurementLogger {
 
     // 初回はヘッダー行書き込み
     if (!await file.exists()) {
-      await file.writeAsString(
-        'timestamp, distance_m, device, ssid, bssid, rssi_dbm\n',
-      );
+      await file.writeAsString(_csvHeader);
     }
     _file = file;
     return file;
@@ -54,7 +54,15 @@ class MeasurementLogger {
         : deviceName.replaceAll(RegExp(r'[^A-Za-z0-9_\-ぁ-んァ-ヶ一-龠]'), '_');
     final exportPath =
         '${file.parent.path}/wifi_measurements_${timestamp}_$safeDeviceName.csv';
-    return file.copy(exportPath);
+    final exported = await file.copy(exportPath);
+    await resetLog();
+    return exported;
+  }
+
+  // エクスポート後は記録をヘッダーのみに戻し、以降の保存分だけを溜める
+  Future<void> resetLog() async {
+    final file = await _getFile();
+    await file.writeAsString(_csvHeader);
   }
 
   String _pad(int value) => value.toString().padLeft(2, '0');

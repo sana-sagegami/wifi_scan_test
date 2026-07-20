@@ -4,9 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wifi_scan/wifi_scan.dart';
 
-import '../data/measurement_logger.dart';
 import '../data/wifi_scan_repository.dart';
-import '../data/wifi_share_repository.dart';
 
 class WifiTestScreen extends HookConsumerWidget {
   const WifiTestScreen({super.key});
