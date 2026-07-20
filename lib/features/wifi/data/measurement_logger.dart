@@ -42,5 +42,20 @@ class MeasurementLogger {
     await file.writeAsString(buffer.toString(), mode: FileMode.append);
   }
 
-  Future<File> getFileForExport() => _getFile();
+  // エクスポート時にファイル名へ日時と端末名を入れたコピーを作る
+  Future<File> getFileForExport({required String deviceName}) async {
+    final file = await _getFile();
+    final now = DateTime.now();
+    final timestamp =
+        '${now.year}-${_pad(now.month)}-${_pad(now.day)}'
+        '_${_pad(now.hour)}-${_pad(now.minute)}-${_pad(now.second)}';
+    final safeDeviceName = deviceName.trim().isEmpty
+        ? 'unknown'
+        : deviceName.replaceAll(RegExp(r'[^A-Za-z0-9_\-ぁ-んァ-ヶ一-龠]'), '_');
+    final exportPath =
+        '${file.parent.path}/wifi_measurements_${timestamp}_$safeDeviceName.csv';
+    return file.copy(exportPath);
+  }
+
+  String _pad(int value) => value.toString().padLeft(2, '0');
 }

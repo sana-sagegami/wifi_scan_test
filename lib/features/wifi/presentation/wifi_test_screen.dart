@@ -50,7 +50,9 @@ class WifiTestScreen extends HookConsumerWidget {
 
     Future<void> exportCsv() async {
       final logger = ref.read(MeasurementLoggerProvider);
-      final file = await logger.getFileForExport();
+      final file = await logger.getFileForExport(
+        deviceName: deviceNameController.text,
+      );
       await Share.shareXFiles([XFile(file.path)]);
     }
 
