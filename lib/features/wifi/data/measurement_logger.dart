@@ -42,21 +42,29 @@ class MeasurementLogger {
     await file.writeAsString(buffer.toString(), mode: FileMode.append);
   }
 
-  // エクスポート時にファイル名へ日時と端末名を入れたコピーを作る
-  Future<File> getFileForExport({required String deviceName}) async {
+  // エクスポート時にファイル名へ端末名・距離・日時を入れたコピーを作る
+  Future<File> getFileForExport({
+    required String deviceName,
+    required String distanceLabel,
+  }) async {
     final file = await _getFile();
     final now = DateTime.now();
     final timestamp =
         '${now.year}-${_pad(now.month)}-${_pad(now.day)}'
         '_${_pad(now.hour)}-${_pad(now.minute)}-${_pad(now.second)}';
-    final safeDeviceName = deviceName.trim().isEmpty
-        ? 'unknown'
-        : deviceName.replaceAll(RegExp(r'[^A-Za-z0-9_\-ぁ-んァ-ヶ一-龠]'), '_');
+    final safeDeviceName = _sanitizeForFileName(deviceName);
+    final safeDistance = _sanitizeForFileName(distanceLabel);
     final exportPath =
-        '${file.parent.path}/wifi_measurements_${timestamp}_$safeDeviceName.csv';
+        '${file.parent.path}/${safeDeviceName}_${safeDistance}_wifi_measurements_$timestamp.csv';
     final exported = await file.copy(exportPath);
     await resetLog();
     return exported;
+  }
+
+  String _sanitizeForFileName(String value) {
+    return value.trim().isEmpty
+        ? 'unknown'
+        : value.replaceAll(RegExp(r'[^A-Za-z0-9_\-ぁ-んァ-ヶ一-龠]'), '_');
   }
 
   // エクスポート後は記録をヘッダーのみに戻し、以降の保存分だけを溜める

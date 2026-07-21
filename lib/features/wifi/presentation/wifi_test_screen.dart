@@ -23,11 +23,11 @@ class WifiTestScreen extends HookConsumerWidget {
     final resultsAsync = ref.watch(wifiScanResultsProvider);
     final distanceController = useTextEditingController();
     final deviceNameController = useTextEditingController(
-      text: 'さな端末',
+      text: '端末A',
     ); // 端末ごとに書き換え
 
     const roomId = 'test-room-1';
-    final peerName = deviceNameController.text == 'さな端末' ? 'りんや端末' : 'さな端末';
+    final peerName = deviceNameController.text == '端末A' ? '端末B' : '端末A';
     final peerAsync = ref.watch(
       peerWifiResultsProvider((roomId: roomId, peerDeviceName: peerName)),
     );
@@ -50,6 +50,7 @@ class WifiTestScreen extends HookConsumerWidget {
       final logger = ref.read(MeasurementLoggerProvider);
       final file = await logger.getFileForExport(
         deviceName: deviceNameController.text,
+        distanceLabel: distanceController.text,
       );
       await Share.shareXFiles([XFile(file.path)]);
     }
@@ -77,7 +78,6 @@ class WifiTestScreen extends HookConsumerWidget {
                 Expanded(
                   child: TextField(
                     controller: distanceController,
-                    keyboardType: TextInputType.number,
                     decoration: const InputDecoration(labelText: '距離(m)'),
                   ),
                 ),
