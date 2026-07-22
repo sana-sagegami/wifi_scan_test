@@ -4,7 +4,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:wifi_scan/wifi_scan.dart';
 import 'package:wifi_scan_test/features/wifi/data/measurement_logger.dart';
-import 'package:wifi_scan_test/features/wifi/data/wifi_share_repository.dart';
 
 abstract class WifiScanRepository {
   Stream<List<WiFiAccessPoint>> get results;
@@ -65,19 +64,3 @@ final wifiScanResultsProvider =
 final MeasurementLoggerProvider = Provider<MeasurementLogger>((ref) {
   return MeasurementLogger();
 });
-
-final wifiShareRepositoryProvider = Provider<WifiShareRepository>((ref) {
-  return WifiShareRepository();
-});
-
-final peerWifiResultsProvider = StreamProvider.family
-    .autoDispose<
-      Map<String, dynamic>?,
-      ({String roomId, String peerDeviceName})
-    >((ref, args) {
-      final repo = ref.watch(wifiShareRepositoryProvider);
-      return repo.watchPeerResults(
-        roomId: args.roomId,
-        peerDeviceName: args.peerDeviceName,
-      );
-    });

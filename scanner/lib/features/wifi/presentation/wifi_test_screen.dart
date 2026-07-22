@@ -26,12 +26,6 @@ class WifiTestScreen extends HookConsumerWidget {
       text: '端末A',
     ); // 端末ごとに書き換え
 
-    const roomId = 'test-room-1';
-    final peerName = deviceNameController.text == '端末A' ? '端末B' : '端末A';
-    final peerAsync = ref.watch(
-      peerWifiResultsProvider((roomId: roomId, peerDeviceName: peerName)),
-    );
-
     Future<void> record(List<WiFiAccessPoint> results) async {
       final logger = ref.read(MeasurementLoggerProvider);
       await logger.logEntry(
@@ -84,30 +78,11 @@ class WifiTestScreen extends HookConsumerWidget {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: peerAsync.when(
-              data: (data) {
-                if (data == null) return const Text('相手のデータ待ち...');
-                final results = (data['results'] as List).cast<Map>();
-                return Text('相手($peerName)が見てるAP数: ${results.length}');
-              },
-              loading: () => const Text('相手のデータ読み込み中...'),
-              error: (e, st) => Text('相手データError: $e'),
-            ),
-          ),
           const Divider(),
           Expanded(
             child: resultsAsync.when(
               data: (results) {
                 _logResults(results);
-                ref
-                    .read(wifiShareRepositoryProvider)
-                    .uploadResults(
-                      roomId: roomId,
-                      deviceName: deviceNameController.text,
-                      results: results,
-                    );
                 if (results.isEmpty) {
                   return const Center(child: Text('結果なし。右下のボタンで再スキャン'));
                 }
